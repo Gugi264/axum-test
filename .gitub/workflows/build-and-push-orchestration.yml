@@ -1,0 +1,15 @@
+name: Build and Push (orchestration)
+
+on:
+  workflow_dispatch:
+  push:
+    branches:
+      - main
+
+jobs:
+  workflow:
+    uses: ./.github/workflows/build-and-push.yml
+    with:
+      image-name: orchestration
+      dockerfile: build/Dockerfile.orchestration
+

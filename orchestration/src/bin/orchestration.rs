@@ -25,7 +25,8 @@ async fn main() {
         })
         .collect();
 
-    let _ = services_health_check(&services, Duration::from_secs(1)).await;
+    let health_result = services_health_check(&services, Duration::from_secs(10)).await;
+    println!("Health check result: {:?}", health_result);
     services.iter().cloned().for_each(|service| {
         tokio::spawn(async move {
             send_interval(service.address).await;
@@ -68,7 +69,7 @@ pub async fn services_health_check(
     println!("starting health checks");
     let health_checks = services
         .iter()
-        .map(|service| health_check(format!("{}/health", service.address)))
+        .map(|service| health_check(format!("{}/health_logged", service.address)))
         .collect::<JoinSet<_>>();
 
     tokio::time::timeout(max_wait_time, health_checks.join_all())

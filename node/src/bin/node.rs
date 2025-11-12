@@ -29,7 +29,8 @@ async fn main() {
     let app = Router::new()
         .route("/", get(root))
         .route("/nodes", post(set_nodes_addr))
-        .route("/health", get(healthy))
+        .route("/health", get(stealthy_healthy))
+        .route("/health_logged", get(healthy_logged))
         .route("/info", get(info))
         .route("/hello_from/{node_nr}", get(hello_from))
         .with_state(state)
@@ -52,8 +53,12 @@ async fn info(State(state): State<AppState>) -> (StatusCode, String) {
     (StatusCode::OK, state.node_nr.to_string())
 }
 
-async fn healthy() -> (StatusCode, String) {
+async fn healthy_logged() -> (StatusCode, String) {
     println!("got health check");
+    (StatusCode::OK, "healthy".to_string())
+}
+
+async fn stealthy_healthy() -> (StatusCode, String) {
     (StatusCode::OK, "healthy".to_string())
 }
 

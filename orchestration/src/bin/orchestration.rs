@@ -139,7 +139,7 @@ async fn send_interval(url: String) {
                 //     text.len()
                 // );
             }
-            Err(e) => eprintln!("Request failed: {e}"),
+            Err(e) => println!("Request failed: {e}"),
         }
     }
 }

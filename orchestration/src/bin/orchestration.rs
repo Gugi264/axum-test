@@ -128,7 +128,7 @@ async fn send_interval(url: String) {
     loop {
         ticker.tick().await;
         let started = Instant::now();
-        match client.get(url.clone() + "/health").send().await {
+        match client.get(url.clone() + "/health_logged").send().await {
             Ok(r) => {
                 let status = r.status();
                 let text = r.text().await.unwrap_or_default();

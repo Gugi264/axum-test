@@ -66,6 +66,7 @@ async fn set_nodes_addr(
     State(state): State<AppState>,
     Json(payload): Json<Vec<MpcNodeAddresses>>,
 ) -> (StatusCode, String) {
+    println!("got node addresses: {:?}", payload);
     let mut nodes = state.nodes.lock().expect("mutex was poisened");
     *nodes = payload;
 

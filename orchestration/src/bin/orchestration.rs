@@ -34,7 +34,8 @@ async fn main() -> eyre::Result<ExitCode> {
         });
     });
 
-    let _ = send_nodes_addr(services, Duration::from_secs(1)).await;
+    let _ = send_nodes_addr(services, Duration::from_secs(2)).await?;
+    println!("send addresses to nodes");
     let app = Router::new()
         .route("/", get(root))
         // .route("/setNodesAddress", post(set_nodes_addr))

@@ -1,4 +1,5 @@
 use reqwest::Client;
+use std::process::ExitCode;
 use std::time::Duration;
 use tokio::task::JoinSet;
 use tokio::time::{Instant, interval};
@@ -13,7 +14,7 @@ use node::structs::MpcNodeAddresses;
 use orchestration::config::Args;
 use tower_http::set_header::SetResponseHeaderLayer;
 #[tokio::main]
-async fn main() {
+async fn main() -> eyre::Result<ExitCode> {
     let args = Args::parse();
     let services: Vec<MpcNodeAddresses> = args
         .services
@@ -25,7 +26,7 @@ async fn main() {
         })
         .collect();
 
-    let health_result = services_health_check(&services, Duration::from_secs(10)).await;
+    let health_result = services_health_check(&services, Duration::from_secs(4)).await?;
     println!("Health check result: {:?}", health_result);
     services.iter().cloned().for_each(|service| {
         tokio::spawn(async move {
@@ -46,6 +47,7 @@ async fn main() {
     let listener = tokio::net::TcpListener::bind(args.bind_addr).await.unwrap();
     println!("Starting orchestration server on {}", args.bind_addr);
     axum::serve(listener, app).await.unwrap();
+    return Ok(ExitCode::SUCCESS);
 }
 
 async fn root() -> &'static str {

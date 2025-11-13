@@ -24,6 +24,7 @@ RUN cargo install simple-web-healthcheck
 
 # FROM gcr.io/distroless/cc-debian12:nonroot AS runtime
 FROM debian:bookworm AS runtime
+RUN apt-get update && apt-get install -y libssl-dev curl
 ARG GIT_HASH
 LABEL org.opencontainers.image.description="Orchestration service test"
 WORKDIR /app
